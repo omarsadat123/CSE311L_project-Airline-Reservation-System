@@ -1,6 +1,4 @@
 
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -97,7 +95,7 @@ button:hover {
 <body>
     <div class="registration-container">
         <h2>Register</h2>
-        <form action="" method="post">
+        <form action="index.html" method="">
             <label for="name">Name:</label>
             
             <input type="text" id="name" name="name" autocomplete="off" required>
@@ -118,16 +116,10 @@ button:hover {
             </select>
 
             <input type="submit" value="Registor" name="user_resistor"> 
-            <p id="message" class="message">Already have an account? <a href="login.html">login here</a></p>
+            <p id="message" class="message">Already have an account? <a href="login.php">login here</a></p>
             
         </form>
     </div>
     <script src="register.js"></script>
 </body>
 </html>
-
-
-
-
-
-

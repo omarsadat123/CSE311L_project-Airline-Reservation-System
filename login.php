@@ -1,3 +1,9 @@
+
+
+<?php include('./including/connect.php');
+
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -80,7 +86,7 @@ button:hover {
 <div class="container">
   <h1>Login to Your Account</h1>
 
-  <form action="" method="post">
+  <form action="user-dashboard.html" method="">
     <label for="username">Username:</label>
     <input type="text" id="username" name="username" placeholder="Enter your username" required>
 
@@ -92,10 +98,20 @@ button:hover {
   </form>
 
   <div class="signup-link">
-    <p>Don't have an account? <a href="signup.html">Sign up here</a></p>
+    <p>Don't have an account? <a href="signup.php">Sign up here</a></p>
    
   </div>
 </div>
 
 </body>
 </html>
+
+<!--
+
+ if ($users['Role'] === 'admin') {
+                    header("Location: admin_dashboard.html");
+                } else {
+                    header("Location: user_dashboard.html");
+                }
+
+-->
