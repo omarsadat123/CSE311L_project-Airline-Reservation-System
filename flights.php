@@ -52,11 +52,11 @@ body {
     <header class="navbar">
         <h1>SkySafe Travel</h1>
         <nav>
-            <a href="index.html">Home</a>
-			<a href="search.html">Flights</a>
-			<a href="hotels.html">Hotels</a>
-			<a href="contact.html">Contact Us</a>
-			<a href="index.html">Logout</a>
+        <a href="index.php">Home</a>
+            <a href="search.php">Flights</a>
+            <a href="hotels.php">Hotels</a>
+            <a href="contact.php">Contact Us</a>
+            <a href="logout.php">Logout</a>
 
         </nav>
     </header>

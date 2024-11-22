@@ -1,4 +1,8 @@
 
+<?php include('./including/connect.php');
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -95,7 +99,7 @@ button:hover {
 <body>
     <div class="registration-container">
         <h2>Register</h2>
-        <form action="index.html" method="">
+        <form action="" method="post">
             <label for="name">Name:</label>
             
             <input type="text" id="name" name="name" autocomplete="off" required>
@@ -123,3 +127,61 @@ button:hover {
     <script src="register.js"></script>
 </body>
 </html>
+
+<?php
+// Get form data
+if (isset($_POST['user_resistor'])) {
+    // Capture  data
+    $name = $_POST['name'];
+    $password = password_hash($_POST['password'], PASSWORD_DEFAULT); // Hash password for security
+    $role = $_POST['role'];
+    $email = $_POST['email'];
+    $phone = $_POST['phone'];
+
+    // Check if the account already exists with the given email or phone number
+    $sql_check = "SELECT * FROM users_email WHERE Email = ? UNION SELECT * FROM users_phone WHERE Phone_Number = ?";
+    $stmt_check = $con->prepare($sql_check);
+    $stmt_check->bind_param("ss", $email, $phone);
+    $stmt_check->execute();
+    $result = $stmt_check->get_result();
+
+    if ($result->num_rows > 0) {
+        // If an account already exists, show an alert
+        echo "<script>alert('An account with this email or phone number already exists.');</script>";
+    } else {
+        // Insert into users table
+        $sql_users = "INSERT INTO users (Name,Password,Role) VALUES (?, ?, ?)";
+        $stmt_users = $con->prepare($sql_users);
+        $stmt_users->bind_param("sss", $name, $password, $role);
+        $stmt_users->execute();
+
+        // Get the last inserted User_id
+        $user_id = $stmt_users->insert_id;
+
+        // Insert into users_email table
+        $sql_email = "INSERT INTO users_email (User_id, Email) VALUES (?, ?)";
+        $stmt_email = $con->prepare($sql_email);
+        $stmt_email->bind_param("is", $user_id, $email);
+        $stmt_email->execute();
+
+        // Insert into users_phone table
+        $sql_phone = "INSERT INTO users_phone (User_id, Phone_Number) VALUES (?, ?)";
+        $stmt_phone = $con->prepare($sql_phone);
+        $stmt_phone->bind_param("is", $user_id, $phone);
+        $stmt_phone->execute();
+
+        // Show success message
+        echo "<script>alert('Data inserted successfully');</script>";
+
+        // Close statements
+        $stmt_users->close();
+        $stmt_email->close();
+        $stmt_phone->close();
+    }
+
+    // Close the check statement and database connection
+    $stmt_check->close();
+    $con->close();
+}
+?>
+

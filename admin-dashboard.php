@@ -123,10 +123,10 @@ body {
     <header class="navbar">
         <h1>SkySafe Admin Panel</h1>
         <nav>
-            <a href="pending-requests.html">Pending Requests</a>
-            <a href="admin-add-flight.html">Add Flights</a>
-            <a href="admin-add-hotel.html">Add Hotels</a>
-            <a href="index.html" class="logout">Logout</a>
+            <a href="pending-requests.php">Pending Requests</a>
+            <a href="admin-add-flight.php">Add Flights</a>
+            <a href="admin-add-hotel.php">Add Hotels</a>
+            <a href="index.php" class="logout">Logout</a>
         </nav>
     </header>
 
@@ -137,9 +137,9 @@ body {
 
         <!-- Admin Options -->
         <div class="admin-options">
-            <a href="pending-requests.html" class="button">View Pending Requests</a>
-            <a href="admin-add-flight.html" class="button">Add New Flight</a>
-            <a href="admin-add-hotel.html" class="button">Add New Hotel</a>
+            <a href="pending-requests.php" class="button">View Pending Requests</a>
+            <a href="admin-add-flight.php" class="button">Add New Flight</a>
+            <a href="admin-add-hotel.php" class="button">Add New Hotel</a>
         </div>
     </section>
 

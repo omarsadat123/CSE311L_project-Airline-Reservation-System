@@ -1,117 +1,202 @@
+<?php 
+include('./including/connect.php');
 
+// Start session
+session_start();
 
-<?php include('./including/connect.php');
+// Check if the login form is submitted
+if (isset($_POST['login'])) {
+    $email = $_POST['email'];
+    $password = $_POST['password'];
 
+    // Query to get the user by email
+    $sql = "SELECT u.User_id, u.Name, u.Password, u.Role
+            FROM users u
+            JOIN users_email ue ON u.User_id = ue.User_id
+            WHERE ue.Email = ?";
+    $stmt = $con->prepare($sql);
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $user = $result->fetch_assoc();
+
+        // Verify password (assuming the password is hashed)
+        if (($password === $user['Password'])) {
+            $_SESSION['User_id'] = $user['User_id'];
+            $_SESSION['Role'] = $user['Role'];
+            $_SESSION['Name'] = $user['Name'];
+
+            // Redirect based on role
+            if ($user['Role'] === 'Admin') {
+                echo "<script>
+                alert('Login successful');
+                window.location.href = 'admin-dashboard.php';
+                </script>";
+            } else {
+                echo "<script>
+                alert('Login successful');
+                window.location.href = 'user-dashboard.php';
+                </script>";
+            }
+            exit;
+        } else {
+            echo "<script>alert('Incorrect password.')</script>";
+        }
+    } else {
+        echo "<script>alert('User not found.')</script>";
+    }
+}
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-<style>
+    <title>Login Page</title>
+    <style>
+        /* General Styling */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
 
-    
-body {
-  font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
-  padding: 100px 40px;
-}
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f9;
+            color: #333;
+        }
 
-.container {
-  background-color: #fff;
-  padding:  35px;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  width: 400px;
-  margin: 0 auto;
-}
+        .login-container {
+            width: 350px;
+            padding: 30px;
+            background-color: #fff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border-radius: 10px;
+            text-align: center;
+        }
 
-h1 {
-  text-align: center;
-  margin-bottom: 30px;
-}
+        h2 {
+            margin-bottom: 20px;
+            color: #005f99;
+        }
 
-label {
-  display: block;
-  margin-bottom: 5px;
-}
-input[type="text"]{
-    margin-bottom: 20px;
-}
-input[type="text"],
-input[type="password"] {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  box-sizing: border-box;
-}
-p a{
-    color: #3074a4; 
-}
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            color: #333;
+        }
 
-button {
-  background-color: #008CBA;
-  color: white;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  width: 100%;
-}
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
 
-button:hover {
-  background-color: #0069D9;
-}
+        button[type="submit"] {
+            width: 100%;
+            padding: 12px;
+            background-color: #005f99;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
 
-.signup-link {
-  text-align: center;
-  margin-top: 20px;
-}
+        button[type="submit"]:hover {
+            background-color: #004080;
+        }
 
-.signup-link a {
-  color: #008CBA;
-  text-decoration: none;
-}
+        .additional-links {
+            margin-top: 20px;
+            font-size: 14px;
+        }
 
-.signup-link a:hover {
-  text-decoration: underline;
-}
-</style>
+        .additional-links a {
+            color: #005f99;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .additional-links a:hover {
+            text-decoration: underline;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+            margin-top: 15px;
+        }
+
+        .dropbtn {
+            background-color: transparent;
+            color: #005f99;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            color: #333;
+            padding: 10px 15px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+    </style>
 </head>
 <body>
+    <div class="login-container">
+        <h2>Login</h2>
+        <form action="" method="POST">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
 
-<div class="container">
-  <h1>Login to Your Account</h1>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
 
-  <form action="user-dashboard.html" method="">
-    <label for="username">Username:</label>
-    <input type="text" id="username" name="username" placeholder="Enter your username" required>
+            <button type="submit" name="login">Login</button>
 
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password" placeholder="Enter your password" required>
-    <p><a href="#">Forgot password ?</a></p>
+            <div class="dropdown">
+                <button class="dropbtn">Forgot Password?</button>
+                <div class="dropdown-content">
+                    <a href="forgot-password.html">Reset Password</a>
+                </div>
+            </div>
+        </form>
 
-    <button type="submit">Login</button>
-  </form>
-
-  <div class="signup-link">
-    <p>Don't have an account? <a href="signup.php">Sign up here</a></p>
-   
-  </div>
-</div>
-
+        <div class="additional-links">
+            <p>Don't have an account? <a href="signup.php">Sign Up</a></p>
+        </div>
+    </div>
 </body>
 </html>
-
-<!--
-
- if ($users['Role'] === 'admin') {
-                    header("Location: admin_dashboard.html");
-                } else {
-                    header("Location: user_dashboard.html");
-                }
-
--->
