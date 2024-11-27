@@ -34,6 +34,24 @@ body {
     width: 90%;
     max-width: 400px;
 }
+.registration-container .close-btn{
+            position: absolute;
+            top: 205px;
+            right: 10px;
+            background: none; /* Remove background */
+            border: none; /* Remove border */
+            font-size: 18px;
+            cursor: pointer;
+            color: #555; /* Button text color */
+            font-weight: bold;
+            padding-right: 800px; /* Remove padding */
+            text-align: right;
+        }
+
+.registration-container .close-btn:hover {
+            color: red;
+            background: none; /* Change color on hover */
+        }
 
 h2 {
     text-align: center;
@@ -77,7 +95,7 @@ button {
     transition: background-color 0.3s ease;
 }
 
-button:hover {
+button[type="submit"]:hover {
     background-color: #1e63d9;
 }
 
@@ -89,15 +107,16 @@ button:hover {
     
 }
 .message a {
-    text-decoration: None;
-    color: #2575fc;
-    font-size: 18px;
+    
+    color:  #005f99;
+    font-weight: bold;
 }
 
 </style>
 </head>
 <body>
     <div class="registration-container">
+    <button class="close-btn" onclick="closeForm()">X</button>
         <h2>Register</h2>
         <form action="" method="post">
             <label for="name">Name:</label>
@@ -118,9 +137,8 @@ button:hover {
                 <option value="user">User</option>
                 <option value="admin">Admin</option>
             </select>
-
-            <input type="submit" value="Registor" name="user_resistor"> 
-            <p id="message" class="message">Already have an account? <a href="login.php">login here</a></p>
+            <button type="submit" name="Registor">Registor</button> 
+            <p id="message" class="message">Already have an account? <a href="login.php">Login here</a></p>
             
         </form>
     </div>
@@ -128,12 +146,19 @@ button:hover {
 </body>
 </html>
 
+<script>
+    function closeForm() {
+        // Redirect to index.php
+        window.location.href = 'index.php';
+    }
+</script>
+
 <?php
 // Get form data
-if (isset($_POST['user_resistor'])) {
+if (isset($_POST['Registor'])) {
     // Capture  data
     $name = $_POST['name'];
-    $password = password_hash($_POST['password'], PASSWORD_DEFAULT); // Hash password for security
+    $password = $_POST['password']; // Hash password for security
     $role = $_POST['role'];
     $email = $_POST['email'];
     $phone = $_POST['phone'];

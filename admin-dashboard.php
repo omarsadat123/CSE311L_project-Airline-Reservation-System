@@ -122,19 +122,19 @@ $user_name = $_SESSION['Name'];
             transition: opacity 0.5s, top 0.5s; /* Smooth animation */
         }
 
-        .form-container.active {
+.form-container.active {
             top: 100px; /* Final visible position */
             opacity: 1;
             visibility: visible; /* Ensure it's visible */
         }
 
-        .form-container h2 {
+.form-container h2 {
             text-align: center;
             color: #005f99;
             margin-bottom: 20px;
         }
 
-        .form-container .close-btn {
+.form-container .close-btn {
             position: absolute;
             top: 10px;
             right: 10px;
@@ -148,12 +148,12 @@ $user_name = $_SESSION['Name'];
             text-align: right;
         }
 
-        .form-container .close-btn:hover {
+.form-container .close-btn:hover {
             color: red;
             background: none; /* Change color on hover */
         }
 
-        .form-container label {
+.form-container label {
             display: block;
             margin-bottom: 8px;
             color: #333;
@@ -162,16 +162,15 @@ $user_name = $_SESSION['Name'];
             font-size: 14px;
         }
 
-        .form-container input {
+.form-container input {
             width: 90%; 
         }
-
-        .form-container select {
+.form-container select {
             width: 95%;
         }
 
-        .form-container input,
-        .form-container select {
+.form-container input,
+.form-container select {
            /* Make all input and select fields equal in width */
             padding: 10px;
             margin-bottom: 15px;
@@ -179,7 +178,7 @@ $user_name = $_SESSION['Name'];
             border-radius: 4px;
         }
 
-        .form-container button {
+.form-container button {
             width: 100%;
             padding: 10px;
             background-color: #005f99;
@@ -310,6 +309,7 @@ $user_name = $_SESSION['Name'];
     function toggleForm() {
         const formContainer = document.getElementById('insertForm');
         formContainer.classList.add('active');
+        flightsContainer.style.display = 'none';
     }
 
     // Function to close the form
@@ -321,7 +321,9 @@ $user_name = $_SESSION['Name'];
 
     function toggleFlights() {
     const flightsContainer = document.getElementById('flightsContainer');
+    const formContainer = document.getElementById('insertForm');
     flightsContainer.style.display = flightsContainer.style.display === 'none' ? 'block' : 'none';
+    formContainer.classList.remove('active');
 }
 
 </script>

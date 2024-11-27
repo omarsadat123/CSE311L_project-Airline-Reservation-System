@@ -1,8 +1,3 @@
-<?php
-// Start the session
-session_start();
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,71 +5,8 @@ session_start();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home | SkySafe</title>
     <style>
-        /* General reset */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Arial', sans-serif;
-        }
-
-        /* Navbar container */
-        .nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center; /* Ensures vertical alignment */
-            background-color: #564E70; /* Dark purple */
-            padding: 15px 30px; /* Extra padding for spacing */
-            color: #fff;
-        }
-
-        /* Logo styling */
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-            color: #FFD700; /* Gold color */
-            cursor: pointer;
-        }
-
-        /* Menu styling */
-        .menu {
-            display: flex;
-            gap: 30px; /* Adds equal spacing between menu items */
-            align-items: center; /* Centers menu items vertically */
-        }
-
-        .menu a {
-            color: #fff;
-            text-decoration: none;
-            font-size: 18px; /* Slightly larger font size */
-            font-weight: bold;
-            transition: color 0.3s ease;
-        }
-
-        .menu a:hover {
-            color: #FFD700; /* Highlight on hover */
-        }
-
-        /* Button styling */
-        .loginBtn {
-            background-color: #FFD700; /* Gold color */
-            color: #564E70; /* Dark purple */
-            border: none;
-            border-radius: 20px;
-            padding: 8px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .loginBtn:hover {
-            background-color: #fff;
-            color: #564E70;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Hero Section */
-        .bg {
+   /* Hero Section */
+         .bg {
             background-image: url(./img/p1.jpg);
             background-size: cover;
             
@@ -121,6 +53,7 @@ session_start();
             margin-top: 20px;
         }
 
+
         /* Footer Styling */
         footer {
             background-color: #333;
@@ -145,32 +78,22 @@ session_start();
     </style>
 </head>
 <body>
-    <!-- Navbar -->
-    <div class="nav">
-        <h1 class="logo">Cholo Palai</h1>
-        <div class="menu">
-            <a href="index.php">Home</a>
-            <a href="login.php">Flights</a>
-            <a href="contact.php">Contact Us</a>
-        </div>
 
-        <?php if (isset($_SESSION['User_id'])): ?>
-            <button class="loginBtn" onclick="window.location.href='logout.php'">Logout</button>
-        <?php else: ?>
-            <button class="loginBtn" onclick="window.location.href='login.php'">Login/Register</button>
-        <?php endif; ?>
+<?php
+
+include 'navbar.php';
+?>
+
+<!-- Hero Section -->
+<div class="bg">
+    <div>
+        <h1>Where to Fly?</h1>
+        <h4>Find Cheap Flights, Airline Tickets in Bangladesh</h4>
     </div>
+</div>
 
-    <!-- Hero Section -->
-    <div class="bg">
-        <div>
-            <h1>Where to Fly?</h1>
-            <h4>Find Cheap Flights, Airline Tickets in Bangladesh</h4>
-        </div>
-    </div>
-
-    <!-- Trending Destinations -->
-    <div class="hero">
+ <!-- Trending Destinations -->
+ <div class="hero">
         <div class="trending">
             <h1>Trending Destinations</h1>
             <p>Expand your travel horizons with us! Diversify your journey to explore beautiful new destinations.</p>
@@ -205,15 +128,16 @@ session_start();
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer>
-        <div class="footer-content">
-            <div class="contact">
-                <p>Email: cholopalai@project.com</p>
-                <p>Phone: +123 456 7890</p>
-            </div>
-            <p class="copy">© Midhat Sadat Owaes</p>
+
+<!-- Footer -->
+<footer>
+    <div class="footer-content">
+        <div class="contact">
+            <p>Email: cholopalai@project.com</p>
+            <p>Phone: +123 456 7890</p>
         </div>
-    </footer>
+        <p class="copy">© Midhat Sadat Owaes</p>
+    </div>
+</footer>
 </body>
 </html>

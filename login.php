@@ -41,7 +41,7 @@ if (isset($_POST['login'])) {
             } else {
                 echo "<script>
                 alert('Login successful');
-                window.location.href = 'user-dashboard.php';
+                window.location.href = 'index.php';
                 </script>";
             }
             exit;
@@ -78,7 +78,7 @@ if (isset($_POST['login'])) {
             color: #333;
         }
 
-        .login-container {
+.login-container {
             width: 350px;
             padding: 30px;
             background-color: #fff;
@@ -86,13 +86,32 @@ if (isset($_POST['login'])) {
             border-radius: 10px;
             text-align: center;
         }
+.login-container .close-btn{
+            position: absolute;
+            top: 315px;
+            right: 10px;
+            background: none; /* Remove background */
+            border: none; /* Remove border */
+            font-size: 18px;
+            cursor: pointer;
+            color: #555; /* Button text color */
+            font-weight: bold;
+            padding-right: 800px; /* Remove padding */
+            text-align: right;
+        }
+
+.login-container .close-btn:hover {
+            color: red;
+            background: none; /* Change color on hover */
+        }
 
         h2 {
-            margin-bottom: 20px;
+            margin-bottom: 22px;
             color: #005f99;
         }
 
         label {
+            text-align: left;
             display: block;
             margin: 10px 0 5px;
             color: #333;
@@ -180,6 +199,7 @@ if (isset($_POST['login'])) {
 </head>
 <body>
     <div class="login-container">
+    <button class="close-btn" onclick="closeForm()">X</button>
         <h2>Login</h2>
         <form action="" method="POST">
             <label for="email">Email:</label>
@@ -204,3 +224,10 @@ if (isset($_POST['login'])) {
     </div>
 </body>
 </html>
+
+<script>
+    function closeForm() {
+        // Redirect to index.php
+        window.location.href = 'index.php';
+    }
+</script>
