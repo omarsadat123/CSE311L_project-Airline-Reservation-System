@@ -235,6 +235,9 @@ $user_name = $_SESSION['Name'];
             <label for="airline">Airline:</label>
             <input type="text" id="airline" name="airline" required>
 
+            <label for="Total_seats">Total_seats:</label>
+            <input type="number" id="Total_seats" name="Total_seats" min="0" required>
+
             <label for="departure_city">Departure City:</label>
             <input type="text" id="departure_city" name="departure_city" required>
 
@@ -262,6 +265,7 @@ $user_name = $_SESSION['Name'];
                 <th>Flight Number</th>
                 <th>Seat Class</th>
                 <th>Airline</th>
+                <th>Total_seats</th>
                 <th>Departure City</th>
                 <th>Destination City</th>
                 <th>Departure Date</th>
@@ -281,6 +285,7 @@ $user_name = $_SESSION['Name'];
                         <td>" . htmlspecialchars($row['Flight_number']) . "</td>
                         <td>" . htmlspecialchars($row['Seat_class']) . "</td>
                         <td>" . htmlspecialchars($row['Airline']) . "</td>
+                        <td>" . htmlspecialchars($row['Total_seats']) . "</td>
                         <td>" . htmlspecialchars($row['Departure_city']) . "</td>
                         <td>" . htmlspecialchars($row['Destination_city']) . "</td>
                         <td>" . htmlspecialchars($row['Departure_date']) . "</td>
@@ -339,18 +344,19 @@ if (isset($_POST['submit'])) {
     $flight_number = $_POST['flight_number'];
     $seat_class = $_POST['seat_class'];
     $airline = $_POST['airline'];
+    $Total_seats = $_POST['Total_seats'];
     $departure_city = $_POST['departure_city'];
     $destination_city = $_POST['destination_city'];
     $departure_date = $_POST['departure_date'];
     $price = $_POST['price'];
 
     // Prepare an SQL query to insert the data
-    $sql = "INSERT INTO flights (Flight_number, Seat_class, Airline, Departure_city, Destination_city, Departure_date, Price) 
-            VALUES (?, ?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO flights (Flight_number, Seat_class, Airline,Total_seats, Departure_city, Destination_city, Departure_date, Price) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
     // Prepare and bind the statement
     $stmt = $con->prepare($sql);
-    $stmt->bind_param("ssssssd", $flight_number, $seat_class, $airline, $departure_city, $destination_city, $departure_date, $price);
+    $stmt->bind_param("sssdsssd", $flight_number, $seat_class, $airline,$Total_seats, $departure_city, $destination_city, $departure_date, $price);
 
     // Execute the query
     if ($stmt->execute()) {

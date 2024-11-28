@@ -1,13 +1,33 @@
 <?php
 // Include the database connection file
-include('./including/connect.php'); // Update the path based on your directory structure
+include('./including/connect.php');
 
 // Initialize variables for search and results
 $search_results = [];
 $show_all_flights = true;
 
+// Fetch all unique departure cities
+$departure_cities = [];
+$sql = "SELECT DISTINCT Departure_city FROM flights";
+$result = $con->query($sql);
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $departure_cities[] = $row['Departure_city'];
+    }
+}
+
+// Fetch all unique destination cities
+$destination_cities = [];
+$sql = "SELECT DISTINCT Destination_city FROM flights";
+$result = $con->query($sql);
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $destination_cities[] = $row['Destination_city'];
+    }
+}
+
+// Handle the search form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Get the search criteria from the form
     $departure_city = $_POST['departure_city'];
     $destination_city = $_POST['destination_city'];
     $departure_date = $_POST['departure_date'];
@@ -19,16 +39,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->execute();
     $result = $stmt->get_result();
 
-    // Fetch the matched results
     if ($result->num_rows > 0) {
         $search_results = $result->fetch_all(MYSQLI_ASSOC);
     } else {
         $search_results = [];
     }
-
     $stmt->close();
 
-    // Do not show all flights if a search is performed
     $show_all_flights = false;
 }
 
@@ -42,9 +59,6 @@ if ($show_all_flights) {
     }
 }
 ?>
-
-
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -73,7 +87,6 @@ if ($show_all_flights) {
             padding: 15px;
         }
 
-        /* Search Form */
         .search-container {
             background: #fff;
             padding: 20px;
@@ -108,7 +121,33 @@ if ($show_all_flights) {
             background-color: #003d66;
         }
 
-        /* Card Grid */
+        .dropdown-container {
+            position: relative;
+        }
+
+        .dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            z-index: 1000;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .dropdown-item {
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .dropdown-item:hover {
+            background: #f0f0f0;
+        }
+
         .card-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -176,17 +215,31 @@ if ($show_all_flights) {
     </style>
 </head>
 <body>
-    <?php include 'navbar.php'; ?>
+<?php include 'navbar.php'; ?>
 
     <div class="container">
         <!-- Search Form -->
         <section class="search-container">
             <form action="" method="POST">
                 <label for="departure_city">Departure City</label>
-                <input type="text" id="departure_city" name="departure_city" placeholder="Enter Departure City" required>
+                <div class="dropdown-container">
+                    <input type="text" id="departure_city" name="departure_city" placeholder="Enter or select Departure City" autocomplete="off" required onfocus="showDropdown('departure_dropdown')">
+                    <div id="departure_dropdown" class="dropdown">
+                        <?php foreach ($departure_cities as $city): ?>
+                            <div class="dropdown-item" onclick="selectOption('departure_city', '<?= htmlspecialchars($city) ?>')"><?= htmlspecialchars($city) ?></div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
 
                 <label for="destination_city">Destination City</label>
-                <input type="text" id="destination_city" name="destination_city" placeholder="Enter Destination City" required>
+                <div class="dropdown-container">
+                    <input type="text" id="destination_city" name="destination_city" placeholder="Enter or select Destination City" autocomplete="off" required onfocus="showDropdown('destination_dropdown')">
+                    <div id="destination_dropdown" class="dropdown">
+                        <?php foreach ($destination_cities as $city): ?>
+                            <div class="dropdown-item" onclick="selectOption('destination_city', '<?= htmlspecialchars($city) ?>')"><?= htmlspecialchars($city) ?></div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
 
                 <label for="departure_date">Departure Date</label>
                 <input type="date" id="departure_date" name="departure_date" required>
@@ -206,6 +259,7 @@ if ($show_all_flights) {
                         <div class="card-content">
                             <p><strong>Airline:</strong> <?= htmlspecialchars($flight['Airline']) ?></p>
                             <p><strong>Seat Class:</strong> <?= htmlspecialchars($flight['Seat_class']) ?></p>
+                            <p><strong>Total Seats:</strong> <?= htmlspecialchars($flight['Total_seats']) ?></p>
                             <p><strong>Departure:</strong> <?= htmlspecialchars($flight['Departure_city']) ?></p>
                             <p><strong>Destination:</strong> <?= htmlspecialchars($flight['Destination_city']) ?></p>
                             <p><strong>Date:</strong> <?= htmlspecialchars($flight['Departure_date']) ?></p>
@@ -221,5 +275,27 @@ if ($show_all_flights) {
             <p style="text-align: center; margin-top: 20px;">No flights found for your search criteria.</p>
         <?php endif; ?>
     </div>
+
+    <script>
+        function showDropdown(id) {
+            document.querySelectorAll('.dropdown').forEach(dropdown => {
+                dropdown.style.display = 'none';
+            });
+            document.getElementById(id).style.display = 'block';
+        }
+
+        function selectOption(inputId, value) {
+            document.getElementById(inputId).value = value;
+            document.getElementById(inputId + '_dropdown').style.display = 'none';
+        }
+
+        document.addEventListener('click', function (e) {
+            if (!e.target.closest('.dropdown-container')) {
+                document.querySelectorAll('.dropdown').forEach(dropdown => {
+                    dropdown.style.display = 'none';
+                });
+            }
+        });
+    </script>
 </body>
 </html>
