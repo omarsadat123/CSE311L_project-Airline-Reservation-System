@@ -1,38 +1,65 @@
 <?php
-// Include the database connection file
+session_start();
 include('./including/connect.php');
 
-// Initialize variables for search and results
+// Ensure user is logged in
+if (!isset($_SESSION['User_id'])) {
+    echo "<script>
+    alert('Please log in to book a flight.');
+    window.location.href = 'login.php';
+    </script>";
+    exit;
+}
+// Initialize variables
 $search_results = [];
 $show_all_flights = true;
 
-// Fetch all unique departure cities
-$departure_cities = [];
-$sql = "SELECT DISTINCT Departure_city FROM flights";
-$result = $con->query($sql);
-if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $departure_cities[] = $row['Departure_city'];
+// Handle booking request
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['book_flight'])) {
+    $User_id = $_SESSION['User_id'] ?? null; // Ensure user_id is stored in the session
+    $flight_id = $_POST['flight_id'];
+
+    if (!$User_id) {
+        echo "<p style='color: red; text-align: center;'>Please log in to book a flight.</p>";
+    } else {
+        // Check available seats
+        $seat_check = $con->prepare("SELECT Total_seats FROM flights WHERE Flight_id = ?");
+        $seat_check->bind_param("s", $flight_id);
+        $seat_check->execute();
+        $result = $seat_check->get_result();
+        $seat_data = $result->fetch_assoc();
+
+        if ($seat_data['Total_seats'] <= 0) {
+            echo "<p style='color: red; text-align: center;'>No seats available for this flight.</p>";
+        } else {
+            // Insert into purchase_request table
+            $sql = "INSERT INTO purchase_request (user_id, flight_id, request_status) VALUES (?, ?, 'Pending')";
+            $stmt = $con->prepare($sql);
+            $stmt->bind_param("is", $User_id, $flight_id);
+
+            if ($stmt->execute()) {
+                // Decrement seat count
+                $update_seats = $con->prepare("UPDATE flights SET Total_seats = Total_seats - 1 WHERE Flight_id = ?");
+                $update_seats->bind_param("s", $flight_id);
+                $update_seats->execute();
+                echo "<p style='color: green; text-align: center;'>Booking request sent successfully!</p>";
+            } else {
+                echo "<p style='color: red; text-align: center;'>Error sending booking request: " . $con->error . "</p>";
+            }
+
+            $stmt->close();
+        }
+
+        $seat_check->close();
     }
 }
 
-// Fetch all unique destination cities
-$destination_cities = [];
-$sql = "SELECT DISTINCT Destination_city FROM flights";
-$result = $con->query($sql);
-if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $destination_cities[] = $row['Destination_city'];
-    }
-}
-
-// Handle the search form submission
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+// Existing search logic (unchanged)
+if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['book_flight'])) {
     $departure_city = $_POST['departure_city'];
     $destination_city = $_POST['destination_city'];
     $departure_date = $_POST['departure_date'];
 
-    // Prepare the SQL query for search
     $sql = "SELECT * FROM flights WHERE Departure_city = ? AND Destination_city = ? AND Departure_date = ?";
     $stmt = $con->prepare($sql);
     $stmt->bind_param("sss", $departure_city, $destination_city, $departure_date);
@@ -121,33 +148,6 @@ if ($show_all_flights) {
             background-color: #003d66;
         }
 
-        .dropdown-container {
-            position: relative;
-        }
-
-        .dropdown {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            z-index: 1000;
-            max-height: 200px;
-            overflow-y: auto;
-        }
-
-        .dropdown-item {
-            padding: 10px;
-            cursor: pointer;
-        }
-
-        .dropdown-item:hover {
-            background: #f0f0f0;
-        }
-
         .card-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -222,24 +222,10 @@ if ($show_all_flights) {
         <section class="search-container">
             <form action="" method="POST">
                 <label for="departure_city">Departure City</label>
-                <div class="dropdown-container">
-                    <input type="text" id="departure_city" name="departure_city" placeholder="Enter or select Departure City" autocomplete="off" required onfocus="showDropdown('departure_dropdown')">
-                    <div id="departure_dropdown" class="dropdown">
-                        <?php foreach ($departure_cities as $city): ?>
-                            <div class="dropdown-item" onclick="selectOption('departure_city', '<?= htmlspecialchars($city) ?>')"><?= htmlspecialchars($city) ?></div>
-                        <?php endforeach; ?>
-                    </div>
-                </div>
+                <input type="text" id="departure_city" name="departure_city" placeholder="Enter Departure City" required>
 
                 <label for="destination_city">Destination City</label>
-                <div class="dropdown-container">
-                    <input type="text" id="destination_city" name="destination_city" placeholder="Enter or select Destination City" autocomplete="off" required onfocus="showDropdown('destination_dropdown')">
-                    <div id="destination_dropdown" class="dropdown">
-                        <?php foreach ($destination_cities as $city): ?>
-                            <div class="dropdown-item" onclick="selectOption('destination_city', '<?= htmlspecialchars($city) ?>')"><?= htmlspecialchars($city) ?></div>
-                        <?php endforeach; ?>
-                    </div>
-                </div>
+                <input type="text" id="destination_city" name="destination_city" placeholder="Enter Destination City" required>
 
                 <label for="departure_date">Departure Date</label>
                 <input type="date" id="departure_date" name="departure_date" required>
@@ -254,11 +240,10 @@ if ($show_all_flights) {
                 <?php foreach ($search_results as $flight): ?>
                     <div class="card">
                         <div class="card-header">
-                            Flight: <?= htmlspecialchars($flight['Flight_number']) ?>
+                            Flight: <?= htmlspecialchars($flight['Flight_id']) ?>
                         </div>
                         <div class="card-content">
                             <p><strong>Airline:</strong> <?= htmlspecialchars($flight['Airline']) ?></p>
-                            <p><strong>Seat Class:</strong> <?= htmlspecialchars($flight['Seat_class']) ?></p>
                             <p><strong>Total Seats:</strong> <?= htmlspecialchars($flight['Total_seats']) ?></p>
                             <p><strong>Departure:</strong> <?= htmlspecialchars($flight['Departure_city']) ?></p>
                             <p><strong>Destination:</strong> <?= htmlspecialchars($flight['Destination_city']) ?></p>
@@ -266,7 +251,11 @@ if ($show_all_flights) {
                             <p class="price">Price: $<?= htmlspecialchars($flight['Price']) ?></p>
                         </div>
                         <div class="card-footer">
-                            <button>Book Now</button>
+                            <form method="POST" action="">
+                                <input type="hidden" name="User_id" value="<?= $_SESSION['User_id'] ?? '' ?>"> 
+                                <input type="hidden" name="flight_id" value="<?= htmlspecialchars($flight['Flight_id']) ?>">
+                                <button type="submit" name="book_flight">Book Now</button>
+                            </form>
                         </div>
                     </div>
                 <?php endforeach; ?>
@@ -275,27 +264,5 @@ if ($show_all_flights) {
             <p style="text-align: center; margin-top: 20px;">No flights found for your search criteria.</p>
         <?php endif; ?>
     </div>
-
-    <script>
-        function showDropdown(id) {
-            document.querySelectorAll('.dropdown').forEach(dropdown => {
-                dropdown.style.display = 'none';
-            });
-            document.getElementById(id).style.display = 'block';
-        }
-
-        function selectOption(inputId, value) {
-            document.getElementById(inputId).value = value;
-            document.getElementById(inputId + '_dropdown').style.display = 'none';
-        }
-
-        document.addEventListener('click', function (e) {
-            if (!e.target.closest('.dropdown-container')) {
-                document.querySelectorAll('.dropdown').forEach(dropdown => {
-                    dropdown.style.display = 'none';
-                });
-            }
-        });
-    </script>
 </body>
 </html>

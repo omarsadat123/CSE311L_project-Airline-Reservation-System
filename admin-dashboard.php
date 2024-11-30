@@ -222,7 +222,7 @@ $user_name = $_SESSION['Name'];
     <li><a href="javascript:void(0);" onclick="toggleForm('addHotelForm', ['insertForm', 'flightsContainer', 'hotelsContainer'])">Add Hotels</a></li>
     <li><a href="javascript:void(0);" onclick="toggleSection('hotelsContainer', ['insertForm', 'addHotelForm', 'flightsContainer'])">Show Hotels</a></li>
 
-            <li><a href="">Pending Requests</a></li>
+            <li><a href="pending-request.php">Pending Requests</a></li>
             <li><a href="logout.php">Logout</a></li>
         </ul>
     </div>
