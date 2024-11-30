@@ -41,38 +41,7 @@ $hotel_requests = $hotel_requests_result->fetch_all(MYSQLI_ASSOC);
     <title>My Bookings</title>
     <style>
         /* General Reset */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
-
-        body {
-            background-color: #f4f4f9;
-            color: #333;
-        }
-
-        /* Navbar */
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem;
-            background-color: rgb(86, 78, 112);
-            color: #fff;
-        }
-
-        .navbar h1 {
-            font-size: 1.5rem;
-        }
-
-        .navbar nav a {
-            margin-left: 15px;
-            color: #fff;
-            text-decoration: none;
-            font-weight: bold;
-        }
+       
 
         /* Section Heading */
         .requests {
@@ -164,25 +133,16 @@ $hotel_requests = $hotel_requests_result->fetch_all(MYSQLI_ASSOC);
 </head>
 <body>
     <!-- Navbar -->
-    <header class="navbar">
-        <h1>SkySafe Travel</h1>
-        <nav>
-            <a href="index.php">Home</a>
-            <a href="search.php">Flights</a>
-            <a href="hotels.php">Hotels</a>
-            <a href="contact.php">Contact Us</a>
-            <a href="logout.php">Logout</a>
-        </nav>
-    </header>
+    <?php include('navbar.php'); ?>
 
     <!-- Main Content -->
     <section class="requests">
-        <h2>My Booking Requests</h2>
+        <h2>Booking Requests</h2>
         <p>View and manage your flight and hotel booking requests below:</p>
 
         <div class="table-container">
             <!-- Flight Requests Table -->
-            <h3>Flight Booking Requests</h3>
+            <h3 style="padding-bottom: 3px;">Flight Booking Requests</h3>
             <table>
                 <thead>
                     <tr>
@@ -213,7 +173,8 @@ $hotel_requests = $hotel_requests_result->fetch_all(MYSQLI_ASSOC);
 
         <div class="table-container">
             <!-- Hotel Requests Table -->
-            <h3>Hotel Booking Requests</h3>
+            <h3 style="padding-bottom: 3px;">Hotel Booking Requests</h3>
+            
             <table>
                 <thead>
                     <tr>

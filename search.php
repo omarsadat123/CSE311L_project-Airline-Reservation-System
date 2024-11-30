@@ -3,13 +3,13 @@ session_start();
 include('./including/connect.php');
 
 // Ensure user is logged in
-if (!isset($_SESSION['User_id'])) {
+/*if (!isset($_SESSION['User_id'])) {
     echo "<script>
     alert('Please log in to book a flight.');
     window.location.href = 'login.php';
     </script>";
     exit;
-}
+}*/
 // Initialize variables
 $search_results = [];
 $show_all_flights = true;
@@ -94,19 +94,7 @@ if ($show_all_flights) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search Flights</title>
     <style>
-        /* General Reset */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Arial', sans-serif;
-        }
-
-        body {
-            background-color: #f9f9f9;
-            color: #333;
-            line-height: 1.6;
-        }
+       
 
         .container {
             max-width: 1200px;

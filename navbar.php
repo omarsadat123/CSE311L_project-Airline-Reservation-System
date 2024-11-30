@@ -1,7 +1,6 @@
 
 <?php
 // Start the session
-session_start();
 
 // Check if the session variable 'Name' is set
 $user_name = isset($_SESSION['Name']) ? $_SESSION['Name'] : null;

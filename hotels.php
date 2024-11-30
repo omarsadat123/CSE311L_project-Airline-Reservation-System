@@ -86,19 +86,7 @@ if ($show_all_hotels) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hotel Listings</title>
     <style>
-        /* General Reset */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
-
-        body {
-            background-color: #f4f4f9;
-            color: #333;
-            padding: 20px;
-        }
+       
 
         /* Search Form Styling */
         .search-form {
