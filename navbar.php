@@ -109,6 +109,7 @@ $user_name = isset($_SESSION['Name']) ? $_SESSION['Name'] : null;
     <a href="index.php" onclick="loadPage('index.php')">Home</a>
     <a href="search.php" onclick="loadPage('flights.php')">Flights</a>
     <a href="hotels.php" onclick="loadPage('hotels.php')">Hotels</a>
+    <a href="my-bookings.php" onclick="loadPage('my-bookings.php')">My Bookings</a>
     <a href="contact.php" onclick="loadPage('contact.php')">Contact Us</a>
 </div>
     <!-- Login/Logout and Signup Buttons -->
