@@ -316,7 +316,7 @@ $user_name = $_SESSION['Name'];
     <li><a href="javascript:void(0);" onclick="toggleSection('flightsContainer', ['insertForm', 'addHotelForm', 'hotelsContainer','pending-request'])">Show Flights</a></li>
     <li><a href="javascript:void(0);" onclick="toggleForm('addHotelForm', ['insertForm', 'flightsContainer', 'hotelsContainer','pending-request'])">Add Hotels</a></li>
     <li><a href="javascript:void(0);" onclick="toggleSection('hotelsContainer', ['insertForm', 'addHotelForm', 'flightsContainer','pending-request'])">Show Hotels</a></li>
-    <li><a href="javascript:void(0);" onclick="toggleSection('pending-request', ['insertForm', 'addHotelForm', 'flightsContainer','pending-request'])">Pending Requests</a></li>
+    <li><a href="javascript:void(0);" onclick="toggleSection('pending-request', ['insertForm', 'addHotelForm', 'flightsContainer','hotelsContainer'])">Pending Requests</a></li>
            
             <li><a href="logout.php">Logout</a></li>
         </ul>
